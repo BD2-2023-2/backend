@@ -6,6 +6,7 @@ export type ProdutoProps = {
   valor: number;
   quantidade: number;
   idFornecedor: UniqueEntityId;
+  fotoUrl: string;
 };
 
 export class Produto extends Entity<ProdutoProps> {
@@ -21,9 +22,16 @@ export class Produto extends Entity<ProdutoProps> {
   get idFornecedor() {
     return this.props.idFornecedor;
   }
+  get fotoUrl(): string {
+    return this.props.fotoUrl;
+  }
 
   set quantidade(quantidade: number) {
     this.props.quantidade = quantidade;
+  }
+
+  registrarSaidaEstoque(quantidade: number): void {
+    this.props.quantidade -= quantidade;
   }
 
   static create(props: ProdutoProps, id?: UniqueEntityId) {

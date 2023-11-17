@@ -22,6 +22,10 @@ export class ItemVenda extends Entity<ItemVendaProps> {
     return this.props.idVenda;
   }
 
+  set idVenda(idVenda: UniqueEntityId) {
+    this.props.idVenda = idVenda;
+  }
+
   static create(props: ItemVendaProps, id?: UniqueEntityId) {
     return new ItemVenda(props, id);
   }

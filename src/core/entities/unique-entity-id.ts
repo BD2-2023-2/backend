@@ -4,7 +4,7 @@ export class UniqueEntityId {
   private _value: bigint | number;
 
   private constructor(value?: bigint) {
-    this._value = value ?? randomInt(1000);
+    this._value = value ?? randomInt(999999999999);
   }
 
   get value(): bigint | number {

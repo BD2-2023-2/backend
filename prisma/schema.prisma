@@ -38,6 +38,7 @@ model produtos {
   valor         Decimal      @db.Decimal(15, 6)
   quantidade    Int
   id_fornecedor BigInt
+  foto_url      String?      @db.VarChar(150)
   itens         itens[]
   fornecedores  fornecedores @relation(fields: [id_fornecedor], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_produto_fornecedor")
 }
