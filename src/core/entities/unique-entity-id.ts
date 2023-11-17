@@ -12,7 +12,11 @@ export class UniqueEntityId {
   }
 
   equals(id: UniqueEntityId): boolean {
-    return id.toString() === this.toString();
+    return id.toNumber() === this.toNumber();
+  }
+
+  toNumber(): number {
+    return Number(this._value);
   }
 
   static createFromInt(value: bigint) {
