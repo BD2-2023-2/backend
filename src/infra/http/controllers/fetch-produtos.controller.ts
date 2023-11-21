@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { FetchProdutosUseCase } from 'src/domain/cafeteria/application/use-cases/fetch-produtos.use-case';
 import { ProdutoPresenter } from '../presenters/produto.presenter';
 
-@Controller('produtos1')
+@Controller('produtos')
 export class FetchProdutosController {
   constructor(private readonly fetchProdutosUseCase: FetchProdutosUseCase) {}
 
