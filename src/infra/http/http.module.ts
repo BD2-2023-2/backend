@@ -1,33 +1,25 @@
 import { Module } from '@nestjs/common';
-import { CreateFornecedorController } from './controllers/create-fornecedor.controller';
-import { CreateFornecedorUseCase } from 'src/domain/cafeteria/application/use-cases/create-fornecedor.use-case';
-import { FetchFornecedoresController } from './controllers/fetch-fornecedores.controller';
-import { FetchFornecedoresUseCase } from 'src/domain/cafeteria/application/use-cases/fetch-fornecedores.use-case';
-import { RealizarVendaUseCase } from 'src/domain/cafeteria/application/use-cases/realizar-venda.use-case';
-import { VenderProdutosController } from './controllers/realizar-venda.controller';
-import { FetchProdutosController } from './controllers/fetch-produtos.controller';
 import { FetchProdutosUseCase } from 'src/domain/cafeteria/application/use-cases/fetch-produtos.use-case';
-import { FindProdutoByIdController } from './controllers/find-produto-by-id.controller';
-import { FindProdutoByIdUseCase } from 'src/domain/cafeteria/application/use-cases/find-produto-by-id.use-case';
-import { CreateProdutoController } from './controllers/create-produto.controller';
+import { FetchProdutosController } from './controllers/fetch-produtos.controller';
 import { CreateProdutoUseCase } from 'src/domain/cafeteria/application/use-cases/create-produto.use-case';
+import { CreateProdutoController } from './controllers/create-produto.controller';
 
 @Module({
   imports: [],
   controllers: [
-    CreateFornecedorController,
-    FetchFornecedoresController,
-    VenderProdutosController,
+    // CreateFornecedorController,
+    // FetchFornecedoresController,
+    // VenderProdutosController,
     FetchProdutosController,
-    FindProdutoByIdController,
+    // FindProdutoByIdController,
     CreateProdutoController,
   ],
   providers: [
-    CreateFornecedorUseCase,
-    FetchFornecedoresUseCase,
-    RealizarVendaUseCase,
+    // CreateFornecedorUseCase,
+    // FetchFornecedoresUseCase,
+    // RealizarVendaUseCase,
     FetchProdutosUseCase,
-    FindProdutoByIdUseCase,
+    // FindProdutoByIdUseCase,
     CreateProdutoUseCase,
   ],
 })

@@ -1,9 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { ProdutosRepository } from '../repositories/produtos.repository';
 import { Produto } from '../../enterprise/entities/produto';
 import { UniqueEntityId } from 'src/core/entities/unique-entity-id';
+import { PrismaClient } from '@prisma/client';
+import { PrismaProdutoMapper } from 'src/infra/database/prisma/mappers/prisma-produto.mapper';
 
 export type CreateProdutoUseCaseRequest = {
+  login: {
+    user: string;
+    password: string;
+  };
   descricao: string;
   fotoUrl: string;
   idFornecedor: number;
@@ -13,14 +18,23 @@ export type CreateProdutoUseCaseRequest = {
 
 @Injectable()
 export class CreateProdutoUseCase {
-  constructor(private readonly produtosRepository: ProdutosRepository) {}
+  private prisma: PrismaClient;
 
-  async execute(data: CreateProdutoUseCaseRequest): Promise<void> {
+  async execute(request: CreateProdutoUseCaseRequest): Promise<void> {
+    this.prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: `postgresql://${request.login.user}:${request.login.password}@ep-patient-scene-74775108-pooler.us-east-2.aws.neon.tech/ecom?sslmode=require&pgbouncer=true&connect_timeout=10`,
+        },
+      },
+    });
     const produto = Produto.create({
-      ...data,
-      idFornecedor: UniqueEntityId.createFromInt(BigInt(data.idFornecedor)),
+      ...request,
+      idFornecedor: UniqueEntityId.createFromInt(BigInt(request.idFornecedor)),
     });
 
-    await this.produtosRepository.create(produto);
+    const data = PrismaProdutoMapper.toPrisma(produto);
+
+    await this.prisma.produtos.create({ data });
   }
 }

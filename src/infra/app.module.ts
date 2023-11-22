@@ -12,7 +12,7 @@ import { HttpModule } from './http/http.module';
       isGlobal: true,
     }),
     EnvModule,
-    DatabaseModule,
+    // DatabaseModule,
     HttpModule,
   ],
 })
