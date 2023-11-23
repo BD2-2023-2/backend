@@ -3,6 +3,8 @@ import { FetchProdutosUseCase } from 'src/domain/cafeteria/application/use-cases
 import { FetchProdutosController } from './controllers/fetch-produtos.controller';
 import { CreateProdutoUseCase } from 'src/domain/cafeteria/application/use-cases/create-produto.use-case';
 import { CreateProdutoController } from './controllers/create-produto.controller';
+import { AutenticarFuncionarioController } from './controllers/autenticar-funcionario.controller';
+import { AutenticarFuncionarioUseCase } from 'src/domain/cafeteria/application/use-cases/autenticar-funcionario.use-case';
 
 @Module({
   imports: [],
@@ -13,6 +15,7 @@ import { CreateProdutoController } from './controllers/create-produto.controller
     FetchProdutosController,
     // FindProdutoByIdController,
     CreateProdutoController,
+    AutenticarFuncionarioController,
   ],
   providers: [
     // CreateFornecedorUseCase,
@@ -21,6 +24,7 @@ import { CreateProdutoController } from './controllers/create-produto.controller
     FetchProdutosUseCase,
     // FindProdutoByIdUseCase,
     CreateProdutoUseCase,
+    AutenticarFuncionarioUseCase,
   ],
 })
 export class HttpModule {}

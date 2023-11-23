@@ -17,8 +17,8 @@ export class CreateProdutoController {
 
   @Post()
   async handle(
-    @Headers('user') user,
-    @Headers('password') password,
+    @Headers('user') user: string,
+    @Headers('password') password: string,
     @Body() data: CreateProdutoUseCaseRequest,
   ) {
     try {
