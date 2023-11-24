@@ -23,6 +23,8 @@ export class FetchProdutosUseCase {
 
     const produtos = await this.prisma.produtos.findMany();
 
+    this.prisma.$disconnect();
+
     return { produtos: produtos.map(PrismaProdutoMapper.toDomain) };
   }
 }
