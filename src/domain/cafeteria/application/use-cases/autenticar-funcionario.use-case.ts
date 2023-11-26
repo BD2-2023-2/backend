@@ -1,6 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
-import { randomUUID } from 'crypto';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/database/prisma/prisma.service';
 
 export type AutenticarFuncionarioUseCaseRequest = {
@@ -9,7 +7,7 @@ export type AutenticarFuncionarioUseCaseRequest = {
 };
 
 export type AutenticarFuncionarioUseCaseResponse = {
-  token: string;
+  idFuncionario: bigint;
 };
 
 @Injectable()
@@ -25,6 +23,6 @@ export class AutenticarFuncionarioUseCase {
     if (!funcionario || funcionario.senha !== data.password)
       throw new Error('Usuário ou senha inválido!');
 
-    return { token: randomUUID() };
+    return { idFuncionario: funcionario.id };
   }
 }

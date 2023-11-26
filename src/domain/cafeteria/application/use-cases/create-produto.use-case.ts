@@ -3,12 +3,10 @@ import { Produto } from '../../enterprise/entities/produto';
 import { UniqueEntityId } from 'src/core/entities/unique-entity-id';
 import { PrismaClient } from '@prisma/client';
 import { PrismaProdutoMapper } from 'src/infra/database/prisma/mappers/prisma-produto.mapper';
+import { DatabaseLogin } from 'src/core/types/database-login';
 
 export type CreateProdutoUseCaseRequest = {
-  login: {
-    user: string;
-    password: string;
-  };
+  login: DatabaseLogin;
   descricao: string;
   fotoUrl: string;
   idFornecedor: number;
@@ -16,11 +14,17 @@ export type CreateProdutoUseCaseRequest = {
   quantidade: number;
 };
 
+export type CreateProdutoUseCaseResponse = {
+  produto: Produto;
+};
+
 @Injectable()
 export class CreateProdutoUseCase {
   private prisma: PrismaClient;
 
-  async execute(request: CreateProdutoUseCaseRequest): Promise<void> {
+  async execute(
+    request: CreateProdutoUseCaseRequest,
+  ): Promise<CreateProdutoUseCaseResponse> {
     this.prisma = new PrismaClient({
       datasources: {
         db: {
@@ -28,6 +32,7 @@ export class CreateProdutoUseCase {
         },
       },
     });
+
     const produto = Produto.create({
       ...request,
       idFornecedor: UniqueEntityId.createFromInt(BigInt(request.idFornecedor)),
@@ -35,6 +40,10 @@ export class CreateProdutoUseCase {
 
     const data = PrismaProdutoMapper.toPrisma(produto);
 
-    await this.prisma.produtos.create({ data });
+    const prismaProduto = await this.prisma.produtos.create({ data });
+
+    await this.prisma.$disconnect();
+
+    return { produto: PrismaProdutoMapper.toDomain(prismaProduto) };
   }
 }

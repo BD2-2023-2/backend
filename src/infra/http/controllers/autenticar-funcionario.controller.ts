@@ -13,12 +13,17 @@ export class AutenticarFuncionarioController {
     @Headers('password') password: string,
   ) {
     try {
-      const { token } = await this.autenticarFuncionarioUseCase.execute({
-        user,
-        password,
-      });
+      const { idFuncionario } = await this.autenticarFuncionarioUseCase.execute(
+        {
+          user,
+          password,
+        },
+      );
 
-      return { token, message: 'Sucesso!' };
+      return {
+        data: { idFuncionario: Number(idFuncionario) },
+        message: 'Sucesso!',
+      };
     } catch (error) {
       throw new BadRequestException(error.message);
     }

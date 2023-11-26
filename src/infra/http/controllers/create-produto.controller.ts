@@ -1,9 +1,10 @@
 import {
-  BadRequestException,
-  Body,
   Controller,
-  Headers,
   Post,
+  Body,
+  ValidationPipe,
+  Headers,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   CreateProdutoUseCase,
@@ -19,17 +20,21 @@ export class CreateProdutoController {
   async handle(
     @Headers('user') user: string,
     @Headers('password') password: string,
-    @Body() data: CreateProdutoUseCaseRequest,
+    @Body(new ValidationPipe({ transform: true }))
+    data: CreateProdutoUseCaseRequest,
   ) {
     try {
       this.createProdutoUseCase = new CreateProdutoUseCase();
 
-      await this.createProdutoUseCase.execute({
+      const { produto } = await this.createProdutoUseCase.execute({
         login: { user, password },
         ...data,
       });
 
-      return { message: 'Produto cadastrado com sucesso!' };
+      return {
+        data: { id: Number(produto.id.value) },
+        message: 'Produto cadastrado com sucesso!',
+      };
     } catch (err) {
       throw new BadRequestException(`${err.code} - ${err.message}`);
     }

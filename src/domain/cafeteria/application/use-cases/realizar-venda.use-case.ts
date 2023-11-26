@@ -1,62 +1,58 @@
-// import { Injectable } from '@nestjs/common';
-// import { ProdutosRepository } from '../repositories/produtos.repository';
-// import { VendasRepository } from '../repositories/vendas.repository';
-// import { ItensVendaRepository } from '../repositories/itens-venda.repository';
-// import { ItemVenda } from '../../enterprise/entities/item-venda';
-// import { Venda } from '../../enterprise/entities/venda';
-// import { UniqueEntityId } from 'src/core/entities/unique-entity-id';
-// import { sumArray } from 'src/core/helpers/sum-array';
-// import { PrismaClient } from '@prisma/client';
+import { Injectable } from '@nestjs/common';
+import { ItemVenda } from '../../enterprise/entities/item-venda';
+import { Venda } from '../../enterprise/entities/venda';
+import { UniqueEntityId } from 'src/core/entities/unique-entity-id';
+import { PrismaClient } from '@prisma/client';
+import { DatabaseLogin } from 'src/core/types/database-login';
 
-// export type RealizarVendaUseCaseRequest = {
-//   produtos: {
-//     id: number;
-//     quantidade: number;
-//     descricao: string;
-//     valor: number;
-//   }[];
-//   idFuncionario: number;
-// };
+export type RealizarVendaUseCaseRequest = {
+  login: DatabaseLogin;
+  produtos: {
+    id: number;
+    quantidade: number;
+    descricao: string;
+    valor: number;
+  }[];
+  idFuncionario: number;
+};
 
-// @Injectable()
-// export class RealizarVendaUseCase {
-//   private prisma: PrismaClient;
-//   async execute({
-//     produtos,
-//     idFuncionario,
-//   }: RealizarVendaUseCaseRequest): Promise<void> {
-//     const venda = Venda.create({
-//       idFuncionario: UniqueEntityId.createFromInt(BigInt(idFuncionario)),
-//       valorTotal: 0,
-//     });
+@Injectable()
+export class RealizarVendaUseCase {
+  private prisma: PrismaClient;
 
-//     const items = produtos.map((produto) => {
-//       return ItemVenda.create({
-//         idProduto: UniqueEntityId.createFromInt(BigInt(produto.id)),
-//         idVenda: venda.id,
-//         quantidade: produto.quantidade,
-//         valor: produto.valor,
-//       });
-//     });
+  async execute({
+    login,
+    produtos,
+    idFuncionario,
+  }: RealizarVendaUseCaseRequest): Promise<void> {
+    this.prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: `${process.env.SOURCE}${login.user}:${login.password}${process.env.HOST}`,
+        },
+      },
+    });
 
-//     const valorTotalPorItem = items.map((item) => item.valor * item.quantidade);
-//     const valorTotalVenda = sumArray(valorTotalPorItem);
+    const venda = Venda.create({
+      idFuncionario: UniqueEntityId.createFromInt(BigInt(idFuncionario)),
+      valorTotal: 0,
+    });
 
-//     venda.valorTotal = valorTotalVenda;
+    const items = produtos.map((produto) => {
+      return ItemVenda.create({
+        idProduto: UniqueEntityId.createFromInt(BigInt(produto.id)),
+        idVenda: venda.id,
+        quantidade: produto.quantidade,
+        valor: produto.valor,
+      });
+    });
 
-//     const idVenda = await this.vendasRepository.create(venda);
+    await this.prisma.$executeRaw`select inserir_venda(id_funcionario := ${
+      venda.idFuncionario.value
+    }::bigint, items_venda := array [${items.map(
+      (item) => `(${item.idProduto.value}, ${item.valor}, ${item.quantidade})`,
+    )}]::item_venda[]);`;
 
-//     items.forEach(async (item) => {
-//       item.idVenda = idVenda;
-//       await this.itensVendaRepository.create(item);
-
-//       const produto = await this.produtosRepository.findByid(
-//         Number(item.idProduto.value),
-//       );
-
-//       produto.registrarSaidaEstoque(item.quantidade);
-
-//       await this.produtosRepository.save(produto);
-//     });
-//   }
-// }
+    await this.prisma.$disconnect();
+  }
+}

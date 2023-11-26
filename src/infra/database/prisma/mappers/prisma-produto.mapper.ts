@@ -6,7 +6,6 @@ export class PrismaProdutoMapper {
   static toPrisma(entity: Produto): Prisma.produtosUncheckedCreateInput {
     return {
       descricao: entity.descricao,
-      id: entity.id.value,
       id_fornecedor: entity.idFornecedor.value,
       quantidade: entity.quantidade,
       valor: entity.valor,

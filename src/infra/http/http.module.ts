@@ -5,26 +5,38 @@ import { CreateProdutoUseCase } from 'src/domain/cafeteria/application/use-cases
 import { CreateProdutoController } from './controllers/create-produto.controller';
 import { AutenticarFuncionarioController } from './controllers/autenticar-funcionario.controller';
 import { AutenticarFuncionarioUseCase } from 'src/domain/cafeteria/application/use-cases/autenticar-funcionario.use-case';
+import { DeleteProdutoController } from './controllers/delete-produto.controller';
+import { DeleteProdutoUseCase } from 'src/domain/cafeteria/application/use-cases/delete-produto.use-case';
+import { FindProdutoByIdUseCase } from 'src/domain/cafeteria/application/use-cases/find-produto-by-id.use-case';
+import { FindProdutoByIdController } from './controllers/find-produto-by-id.controller';
+import { RealizarVendaUseCase } from 'src/domain/cafeteria/application/use-cases/realizar-venda.use-case';
+import { RealizarVendasController } from './controllers/realizar-venda.controller';
+import { FetchVendasController } from './controllers/fetch-vendas.controller';
+import { FetchVendasUseCase } from 'src/domain/cafeteria/application/use-cases/fetch-vendas.use-case';
 
 @Module({
   imports: [],
   controllers: [
     // CreateFornecedorController,
     // FetchFornecedoresController,
-    // VenderProdutosController,
+    RealizarVendasController,
     FetchProdutosController,
-    // FindProdutoByIdController,
+    FindProdutoByIdController,
     CreateProdutoController,
     AutenticarFuncionarioController,
+    DeleteProdutoController,
+    FetchVendasController,
   ],
   providers: [
     // CreateFornecedorUseCase,
     // FetchFornecedoresUseCase,
-    // RealizarVendaUseCase,
+    RealizarVendaUseCase,
     FetchProdutosUseCase,
-    // FindProdutoByIdUseCase,
+    FindProdutoByIdUseCase,
     CreateProdutoUseCase,
     AutenticarFuncionarioUseCase,
+    DeleteProdutoUseCase,
+    FetchVendasUseCase,
   ],
 })
 export class HttpModule {}
