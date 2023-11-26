@@ -5,9 +5,10 @@ export class ProdutoPresenter {
     return {
       id: Number(entity.id.value),
       descricao: entity.descricao,
-      valorUnitario: entity.valor,
-      quantidadeEstoque: entity.quantidade,
+      valor: entity.valor,
+      quantidade: entity.quantidade,
       fotoUrl: entity.fotoUrl,
+      idFornecedor: Number(entity.idFornecedor.value),
     };
   }
 }

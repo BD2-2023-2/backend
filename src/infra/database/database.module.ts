@@ -19,6 +19,7 @@ import { PrismaProdutosRepository } from './prisma/repositories/produtos.reposit
     { provide: ProdutosRepository, useClass: PrismaProdutosRepository },
   ],
   exports: [
+    PrismaService,
     FornecedoresRepository,
     ItensVendaRepository,
     VendasRepository,

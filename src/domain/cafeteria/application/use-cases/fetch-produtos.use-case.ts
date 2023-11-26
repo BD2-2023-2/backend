@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ProdutosRepository } from '../repositories/produtos.repository';
 import { Produto } from '../../enterprise/entities/produto';
+import { PrismaClient } from '@prisma/client';
+import { PrismaProdutoMapper } from 'src/infra/database/prisma/mappers/prisma-produto.mapper';
+import { DatabaseLogin } from 'src/core/types/database-login';
 
 export type FetchProdutosUseCaseResponse = {
   produtos: Produto[];
@@ -8,11 +10,21 @@ export type FetchProdutosUseCaseResponse = {
 
 @Injectable()
 export class FetchProdutosUseCase {
-  constructor(private readonly produtosRepository: ProdutosRepository) {}
+  private prisma: PrismaClient;
 
-  async execute(): Promise<FetchProdutosUseCaseResponse> {
-    const produtos = await this.produtosRepository.fetch();
+  async execute(login: DatabaseLogin): Promise<FetchProdutosUseCaseResponse> {
+    this.prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: `${process.env.SOURCE}${login.user}:${login.password}${process.env.HOST}`,
+        },
+      },
+    });
 
-    return { produtos };
+    const produtos = await this.prisma.produtos.findMany();
+
+    this.prisma.$disconnect();
+
+    return { produtos: produtos.map(PrismaProdutoMapper.toDomain) };
   }
 }

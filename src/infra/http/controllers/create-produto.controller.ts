@@ -1,4 +1,11 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  ValidationPipe,
+  Headers,
+  BadRequestException,
+} from '@nestjs/common';
 import {
   CreateProdutoUseCase,
   CreateProdutoUseCaseRequest,
@@ -6,16 +13,30 @@ import {
 
 @Controller('produtos')
 export class CreateProdutoController {
-  constructor(private readonly createProdutoUseCase: CreateProdutoUseCase) {}
+  private createProdutoUseCase: CreateProdutoUseCase;
+  constructor() {}
 
   @Post()
-  async handle(@Body() data: CreateProdutoUseCaseRequest) {
+  async handle(
+    @Headers('user') user: string,
+    @Headers('password') password: string,
+    @Body(new ValidationPipe({ transform: true }))
+    data: CreateProdutoUseCaseRequest,
+  ) {
     try {
-      await this.createProdutoUseCase.execute(data);
+      this.createProdutoUseCase = new CreateProdutoUseCase();
 
-      return { message: 'Produto cadastrado com sucesso!' };
+      const { produto } = await this.createProdutoUseCase.execute({
+        login: { user, password },
+        ...data,
+      });
+
+      return {
+        data: { id: Number(produto.id.value) },
+        message: 'Produto cadastrado com sucesso!',
+      };
     } catch (err) {
-      throw new BadRequestException(err.message);
+      throw new BadRequestException(`${err.code} - ${err.message}`);
     }
   }
 }

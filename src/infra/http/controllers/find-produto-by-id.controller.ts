@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Controller,
   Get,
+  Headers,
   NotFoundException,
   Param,
   ParseIntPipe,
@@ -17,9 +18,16 @@ export class FindProdutoByIdController {
   ) {}
 
   @Get()
-  async handle(@Param('id', ParseIntPipe) id: number) {
+  async handle(
+    @Param('id', ParseIntPipe) id: number,
+    @Headers('user') user: string,
+    @Headers('password') password: string,
+  ) {
     try {
-      const { produto } = await this.findProdutoByIdUseCase.execute({ id });
+      const { produto } = await this.findProdutoByIdUseCase.execute({
+        id,
+        login: { user, password },
+      });
 
       return { data: ProdutoPresenter.toHttp(produto) };
     } catch (err) {
