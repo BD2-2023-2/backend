@@ -3,13 +3,18 @@ import { PrismaClient } from '@prisma/client';
 import { DatabaseLogin } from 'src/core/types/database-login';
 import { Venda } from '../../enterprise/entities/venda';
 import { PrismaVendaMapper } from 'src/infra/database/prisma/mappers/prisma-venda.mapper';
+import { Funcionario } from '../../enterprise/entities/funcionario';
+import { PrismaFuncionarioMapper } from 'src/infra/database/prisma/mappers/prisma-funcionario.mapper';
 
 export type FetchVendasUseCaseRequest = {
   login: DatabaseLogin;
 };
 
 export type FetchVendasUseCaseResponse = {
-  vendas: Venda[];
+  data: {
+    venda: Venda;
+    funcionario: Funcionario;
+  }[];
 };
 
 @Injectable()
@@ -28,7 +33,19 @@ export class FetchVendasUseCase {
     });
 
     const vendas = await this.prisma.vendas.findMany();
+    const funcionarios = await this.prisma.funcionarios.findMany();
 
-    return { vendas: vendas.map(PrismaVendaMapper.toDomain) };
+    const data = vendas.map((venda) => {
+      return {
+        venda: PrismaVendaMapper.toDomain(venda),
+        funcionario: PrismaFuncionarioMapper.toDomain(
+          funcionarios.find(
+            (funcionario) => funcionario.id === venda.id_funcionario,
+          ),
+        ),
+      };
+    });
+
+    return { data };
   }
 }

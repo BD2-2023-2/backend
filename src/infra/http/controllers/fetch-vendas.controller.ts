@@ -12,11 +12,15 @@ export class FetchVendasController {
     @Headers('password') password: string,
   ) {
     try {
-      const { vendas } = await this.fetchVendasUseCase.execute({
+      const { data } = await this.fetchVendasUseCase.execute({
         login: { user, password },
       });
 
-      return { data: vendas.map(VendaPresenter.toHttp) };
+      return {
+        data: data.map((item) =>
+          VendaPresenter.toHttp(item.venda, item.funcionario),
+        ),
+      };
     } catch (error) {
       throw new BadRequestException(error.message);
     }

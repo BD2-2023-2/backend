@@ -13,6 +13,8 @@ import { RealizarVendaUseCase } from 'src/domain/cafeteria/application/use-cases
 import { RealizarVendasController } from './controllers/realizar-venda.controller';
 import { FetchVendasController } from './controllers/fetch-vendas.controller';
 import { FetchVendasUseCase } from 'src/domain/cafeteria/application/use-cases/fetch-vendas.use-case';
+import { FindVendaByIdController } from './controllers/find-venda-by-id.controller';
+import { FindVendaByIdUseCase } from 'src/domain/cafeteria/application/use-cases/find-venda-by-id.use-case';
 
 @Module({
   imports: [],
@@ -26,6 +28,7 @@ import { FetchVendasUseCase } from 'src/domain/cafeteria/application/use-cases/f
     AutenticarFuncionarioController,
     DeleteProdutoController,
     FetchVendasController,
+    FindVendaByIdController,
   ],
   providers: [
     // CreateFornecedorUseCase,
@@ -37,6 +40,7 @@ import { FetchVendasUseCase } from 'src/domain/cafeteria/application/use-cases/f
     AutenticarFuncionarioUseCase,
     DeleteProdutoUseCase,
     FetchVendasUseCase,
+    FindVendaByIdUseCase,
   ],
 })
 export class HttpModule {}

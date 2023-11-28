@@ -20,6 +20,7 @@ export class RealizarVendasController {
     @Headers('user') user: string,
     @Headers('password') password: string,
   ) {
+    console.log(user, password, data);
     try {
       await this.realizarVendaUseCase.execute({
         login: { user, password },
