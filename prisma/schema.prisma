@@ -14,12 +14,13 @@ model fornecedores {
 }
 
 model funcionarios {
-  id     BigInt   @id(map: "pk_funcionarios") @default(autoincrement())
-  nome   String   @db.VarChar(45)
-  cpf    String   @db.VarChar(45)
-  senha  String?  @db.VarChar(50)
-  funcao String?  @db.VarChar(50)
-  vendas vendas[]
+  id        BigInt   @id(map: "pk_funcionarios") @default(autoincrement())
+  nome      String   @db.VarChar(45)
+  cpf       String   @db.VarChar(45)
+  senha     String?  @db.VarChar(50)
+  usuario   String?  @db.VarChar(20)
+  id_funcao BigInt?
+  vendas    vendas[]
 }
 
 model itens {
@@ -50,4 +51,10 @@ model vendas {
   id_funcionario BigInt
   itens          itens[]
   funcionarios   funcionarios @relation(fields: [id_funcionario], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_vendas_funcionarios")
+}
+
+// / We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+model funcoes {
+  id        BigInt @id(map: "pk_funcoes") @default(autoincrement())
+  descricao String @db.VarChar(45)
 }

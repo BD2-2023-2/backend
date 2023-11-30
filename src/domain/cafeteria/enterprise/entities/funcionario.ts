@@ -5,7 +5,7 @@ export type FuncionarioProps = {
   nome: string;
   cpf: string;
   senha: string;
-  funcao: string;
+  idFuncao: UniqueEntityId;
 };
 export class Funcionario extends Entity<FuncionarioProps> {
   get nome(): string {
@@ -17,8 +17,8 @@ export class Funcionario extends Entity<FuncionarioProps> {
   get senha(): string {
     return this.props.senha;
   }
-  get funcao(): string {
-    return this.props.funcao;
+  get funcao(): UniqueEntityId {
+    return this.props.idFuncao;
   }
   static create(props: FuncionarioProps, id?: UniqueEntityId) {
     return new Funcionario(props, id);

@@ -7,7 +7,7 @@ export class PrismaFuncionarioMapper {
     return Funcionario.create(
       {
         cpf: raw.cpf,
-        funcao: raw.funcao,
+        idFuncao: UniqueEntityId.createFromInt(raw.id_funcao),
         senha: raw.senha,
         nome: raw.nome,
       },

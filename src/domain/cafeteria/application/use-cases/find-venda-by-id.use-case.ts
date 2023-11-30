@@ -42,6 +42,8 @@ export class FindVendaByIdUseCase {
       where: { id: BigInt(venda.id_funcionario) },
     });
 
+    await this.prisma.$disconnect();
+
     return {
       venda: PrismaVendaMapper.toDomain(venda),
       items: items.map(PrismaItensVendaMapper.toDomain),

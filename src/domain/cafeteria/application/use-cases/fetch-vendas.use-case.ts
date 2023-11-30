@@ -36,15 +36,16 @@ export class FetchVendasUseCase {
     const funcionarios = await this.prisma.funcionarios.findMany();
 
     const data = vendas.map((venda) => {
+      const funcionario = funcionarios.find(
+        (funcionario) => funcionario.id === venda.id_funcionario,
+      );
       return {
         venda: PrismaVendaMapper.toDomain(venda),
-        funcionario: PrismaFuncionarioMapper.toDomain(
-          funcionarios.find(
-            (funcionario) => funcionario.id === venda.id_funcionario,
-          ),
-        ),
+        funcionario: PrismaFuncionarioMapper.toDomain(funcionario),
       };
     });
+
+    await this.prisma.$disconnect();
 
     return { data };
   }
